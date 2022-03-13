@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+    server:
+        build: ./products_manager
+        container_name: python-products
+        links:
+            - db
+        ports:
+         - "5000:5000"
+    db:
+        image: mysql:5.7
+        restart: always
+        hostname: mysql-db
+        container_name: mysql-db
+        environment:
+            MYSQL_DATABASE: products_db
+            MYSQL_USER: 'user'
+            MYSQL_PASSWORD: 'root'
+            MYSQL_ROOT_PASSWORD: 'root'
+        ports:
+            - '3306:3306'
+        expose:
+            - '3306'
+        command: --init-file /db_utils/init.sql
+        volumes:
+            - ./init.sql:/db_utils/init.sql
+            - my-db:/var/lib/mysql
+volumes:
+    my-db:
